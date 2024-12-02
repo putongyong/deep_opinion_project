@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 from src.models import models
-from src.schemas import schemas
+from src.entities import UserInputEntities
 
-def create_user_input(db: Session, user_input: schemas.UserInputCreate):
+def create_user_input(db: Session, user_input: UserInputEntities.UserInputCreate):
     """
     Create a new entry in the database for the user's input and the generated result list.
 

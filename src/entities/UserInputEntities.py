@@ -1,6 +1,14 @@
 from pydantic import BaseModel
 from typing import List
 
+class RangeInput(BaseModel):
+    """
+    Schema for range input with identifier and range bounds.
+    """
+    id: str
+    int1: int
+    int2: int
+
 class UserInputBase(BaseModel):
     """
     Base schema for user input and generated results.

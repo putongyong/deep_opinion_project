@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Flask App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to the Flask App</h1>
+
+        <section class="form-section">
+            <h2>Submit Your Data</h2>
+            <form action="/api/data" method="POST">
+                <label for="identifier">Identifier:</label>
+                <input type="text" id="identifier" name="identifier" required>
+
+                <label for="first-input">First Input:</label>
+                <input type="number" id="first-input" name="first_input" required>
+
+                <label for="second-input">Second Input:</label>
+                <input type="number" id="second-input" name="second_input" required>
+
+                <button type="submit">Submit</button>
+            </form>
+        </section>
+
+        <section class="fetch-by-id">
+            <h2>Get Data by ID</h2>
+            <form action="/api/data/<id>" method="GET">
+                <label for="data-id">Enter ID:</label>
+                <input type="text" id="data-id" name="id" required>
+                <button type="submit">Fetch</button>
+            </form>
+        </section>
+
+        <section class="all-data">
+            <h2>View All Data</h2>
+            <form action="/api/data" method="GET">
+                <label for="page-number">Page:</label>
+                <input type="number" id="page-number" name="page" value="1" min="1">
+                <button type="submit">View</button>
+            </form>
+        </section>
+    </div>
+</body>
+</html>

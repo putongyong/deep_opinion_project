@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from sqlalchemy.orm import Session
-from src.schemas import schemas
+from src.entities import UserInputEntities
 from src.crud import crud
 from src.db.session import get_db
 
@@ -16,9 +16,9 @@ def create_user_input():
     data = request.json
 
     try:
-        user_input = schemas.UserInputCreate(**data)
+        user_input = UserInputEntities.UserInputCreate(**data)
         db_user_input = crud.create_user_input(db, user_input)
-        return jsonify(schemas.UserInputResponse.model_dump(db_user_input)), 201
+        return jsonify(UserInputEntities.UserInputResponse.model_dump(db_user_input)), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
@@ -33,7 +33,7 @@ def read_user_input(user_input_id: int):
     if db_user_input is None:
         return jsonify({"error": "User input not found"}), 404
 
-    return jsonify(schemas.UserInputResponse.model_dump(db_user_input)), 200
+    return jsonify(UserInputEntities.UserInputResponse.model_dump(db_user_input)), 200
 
 @bp.route("/all_user_inputs/", methods=["GET"])
 def read_all_user_inputs():
@@ -46,6 +46,6 @@ def read_all_user_inputs():
         limit = int(request.args.get("limit", 10))   # Default limit to 10
 
         user_inputs = crud.get_all_user_inputs(db, skip=offset, limit=limit)
-        return jsonify([schemas.UserInputResponse.model_dump(user_input) for user_input in user_inputs]), 200
+        return jsonify([UserInputEntities.UserInputResponse.model_dump(user_input) for user_input in user_inputs]), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 400
