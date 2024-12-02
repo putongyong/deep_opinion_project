@@ -1,0 +1,36 @@
+Commands Overview
+
+1. Build the Containers:
+
+    make build
+
+2. Start the Containers:
+
+    make up
+
+3. Stop and Remove the Containers:
+
+    make down
+
+4. Rebuild and Restart:
+
+    make rebuild
+
+5. View Logs:
+
+    All services: make logs
+    App logs: make logs-app
+    Database logs: make logs-db
+
+6. Check Running Containers:
+
+    make ps
+
+7. Execute Commands in Containers:
+
+    App container: make exec-app
+    Database container: make exec-db
+
+8. Clean Up Resources:
+
+    make clean
