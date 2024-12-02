@@ -16,12 +16,6 @@ class UserInputBase(BaseModel):
     identifier: str
     result_list: List[int]
 
-class UserInputCreate(UserInputBase):
-    """
-    Schema for creating a new user input entry.
-    """
-    pass
-
 class UserInputResponse(UserInputBase):
     """
     Schema for returning a user input entry.

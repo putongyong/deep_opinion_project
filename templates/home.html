@@ -5,6 +5,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to Flask App</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+        // Handle form submission dynamically with JavaScript (AJAX)
+        async function submitForm(event) {
+            event.preventDefault(); // Prevent default form submission
+            const form = event.target;
+
+            // Determine form action and method
+            const action = form.action;
+            const method = form.method;
+
+            // Prepare data payload
+            let data = {};
+            if (method === "POST") {
+                // Collect input data for POST form
+                data = {
+                    identifier: form.elements["identifier"].value,
+                    int1: parseInt(form.elements["int1"].value, 10),
+                    int2: parseInt(form.elements["int2"].value, 10)
+                };
+
+                // Validate inputs
+                if (isNaN(data.int1) || isNaN(data.int2)) {
+                    alert("Please enter valid numbers for First Input and Second Input.");
+                    return;
+                }
+            } else if (method === "GET") {
+                // Collect data for GET forms dynamically
+                const params = new URLSearchParams();
+                for (const element of form.elements) {
+                    if (element.name) {
+                        params.append(element.name, element.value);
+                    }
+                }
+                action += "?" + params.toString();
+            }
+
+            try {
+                const response = await fetch(action, {
+                    method: method,
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    ...(method === "POST" ? { body: JSON.stringify(data) } : {})
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    alert("Data retrieved successfully: " + JSON.stringify(result));
+                } else {
+                    const errorMessage = await response.text();
+                    alert("Failed to retrieve data: " + errorMessage);
+                }
+            } catch (error) {
+                alert("Error: " + error.message);
+            }
+        }
+        
+    </script>
 </head>
 <body>
     <div class="container">
@@ -12,15 +70,15 @@
 
         <section class="form-section">
             <h2>Submit Your Data</h2>
-            <form action="/api/data" method="POST">
+            <form action="/api/user_inputs/" method="POST" onsubmit="submitForm(event)">
                 <label for="identifier">Identifier:</label>
                 <input type="text" id="identifier" name="identifier" required>
 
-                <label for="first-input">First Input:</label>
-                <input type="number" id="first-input" name="first_input" required>
+                <label for="int1">First Input:</label>
+                <input type="number" id="int1" name="int1" required>
 
-                <label for="second-input">Second Input:</label>
-                <input type="number" id="second-input" name="second_input" required>
+                <label for="int2">Second Input:</label>
+                <input type="number" id="int2" name="int2" required>
 
                 <button type="submit">Submit</button>
             </form>
@@ -28,7 +86,7 @@
 
         <section class="fetch-by-id">
             <h2>Get Data by ID</h2>
-            <form action="/api/data/<id>" method="GET">
+            <form action="/api/user_inputs/<int:user_input_id>" method="GET">
                 <label for="data-id">Enter ID:</label>
                 <input type="text" id="data-id" name="id" required>
                 <button type="submit">Fetch</button>
@@ -37,11 +95,13 @@
 
         <section class="all-data">
             <h2>View All Data</h2>
-            <form action="/api/data" method="GET">
+            <form action="/api/all_user_inputs/" method="GET">
                 <label for="page-number">Page:</label>
-                <input type="number" id="page-number" name="page" value="1" min="1">
+                <input type="number" id="page-number" name="offset" value="0" min="0">
+                <input type="number" id="limit" name="limit" value="10" min="1">
                 <button type="submit">View</button>
             </form>
+            
         </section>
     </div>
 </body>
