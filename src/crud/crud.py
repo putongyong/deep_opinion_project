@@ -22,7 +22,7 @@ def create_user_input(db: Session, user_input: UserInputEntities.UserInputBase):
     db.refresh(db_user_input)
     return db_user_input
 
-def get_user_input_by_id(db: Session, user_input_id: int):
+def get_user_input_by_id(db: Session, user_input_id: str):
     """
     Retrieve a user input entry by its ID.
 
@@ -33,7 +33,7 @@ def get_user_input_by_id(db: Session, user_input_id: int):
     Returns:
         models.UserInput: The retrieved database entry or None if not found.
     """
-    return db.query(models.UserInput).filter(models.UserInput.id == user_input_id).first()
+    return db.query(models.UserInput).filter(models.UserInput.identifier == user_input_id).first()
 
 def get_all_user_inputs(db: Session, skip: int = 0, limit: int = 10):
     """

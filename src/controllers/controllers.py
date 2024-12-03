@@ -44,7 +44,7 @@ def create_user_input():
         # Handle other exceptions
         return jsonify({"error": str(e)}), 500
 
-@bp.route("/user_inputs/<int:user_input_id>", methods=["GET"])
+@bp.route("/user_inputs/<user_input_id>/", methods=["GET"])
 def read_user_input(user_input_id: str):
     """
     Endpoint to fetch a specific user input by its ID.
@@ -54,8 +54,12 @@ def read_user_input(user_input_id: str):
 
     if db_user_input is None:
         return jsonify({"error": "User input not found"}), 404
+    
+    user_input = db_user_input.__dict__
 
-    return jsonify(UserInputEntities.UserInputResponse.model_dump(db_user_input)), 200
+        # Serialize using Pydantic
+    user_input_response = UserInputEntities.UserInputResponse(**user_input).model_dump()
+    return jsonify(user_input_response), 200
 
 @bp.route("/all_user_inputs/", methods=["GET"])
 def read_all_user_inputs():
