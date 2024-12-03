@@ -35,7 +35,7 @@ def get_user_input_by_id(db: Session, user_input_id: int):
     """
     return db.query(models.UserInput).filter(models.UserInput.id == user_input_id).first()
 
-def get_all_user_inputs(db: Session, skip: int = 0, limit: int = 100):
+def get_all_user_inputs(db: Session, skip: int = 0, limit: int = 10):
     """
     Retrieve all user input entries from the database.
 

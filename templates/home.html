@@ -8,54 +8,45 @@
     <script>
         // Handle form submission dynamically with JavaScript (AJAX)
         async function submitForm(event) {
-            event.preventDefault(); // Prevent default form submission
+            event.preventDefault();
+        
             const form = event.target;
-
-            // Determine form action and method
-            const action = form.action;
-            const method = form.method;
-
-            // Prepare data payload
-            let data = {};
-            if (method === "POST") {
-                // Collect input data for POST form
-                data = {
-                    identifier: form.elements["identifier"].value,
-                    int1: parseInt(form.elements["int1"].value, 10),
-                    int2: parseInt(form.elements["int2"].value, 10)
-                };
-
-                // Validate inputs
-                if (isNaN(data.int1) || isNaN(data.int2)) {
-                    alert("Please enter valid numbers for First Input and Second Input.");
-                    return;
-                }
-            } else if (method === "GET") {
-                // Collect data for GET forms dynamically
-                const params = new URLSearchParams();
-                for (const element of form.elements) {
-                    if (element.name) {
-                        params.append(element.name, element.value);
-                    }
-                }
-                action += "?" + params.toString();
+        
+            const data = {
+                id: form.elements["id"].value.trim(),
+                int1: parseInt(form.elements["int1"].value.trim(), 10),
+                int2: parseInt(form.elements["int2"].value.trim(), 10)
+            };
+        
+            console.log("Data being sent to the server:", data);
+        
+            // Validate inputs
+            if (!data.id) {
+                alert("Identifier is required.");
+                return;
             }
-
+            if (isNaN(data.int1) || isNaN(data.int2)) {
+                alert("Please enter valid numbers for First Input and Second Input.");
+                return;
+            }
+        
             try {
-                const response = await fetch(action, {
-                    method: method,
+                const response = await fetch("/api/user_inputs/", {
+                    method: "POST",
                     headers: {
-                        "Content-Type": "application/json"
+                        "Content-Type": "application/json",
                     },
-                    ...(method === "POST" ? { body: JSON.stringify(data) } : {})
+                    body: JSON.stringify(data)
                 });
-
+        
+                console.log("Raw response from the server:", response);
+        
                 if (response.ok) {
                     const result = await response.json();
-                    alert("Data retrieved successfully: " + JSON.stringify(result));
+                    alert("Data submitted successfully: " + JSON.stringify(result));
                 } else {
                     const errorMessage = await response.text();
-                    alert("Failed to retrieve data: " + errorMessage);
+                    alert("Failed to submit data: " + errorMessage);
                 }
             } catch (error) {
                 alert("Error: " + error.message);
@@ -71,8 +62,8 @@
         <section class="form-section">
             <h2>Submit Your Data</h2>
             <form action="/api/user_inputs/" method="POST" onsubmit="submitForm(event)">
-                <label for="identifier">Identifier:</label>
-                <input type="text" id="identifier" name="identifier" required>
+                <label for="id">Identifier:</label>
+                <input type="text" id="id" name="id" required>
 
                 <label for="int1">First Input:</label>
                 <input type="number" id="int1" name="int1" required>

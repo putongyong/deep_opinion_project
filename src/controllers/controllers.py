@@ -5,6 +5,9 @@ from src.crud import crud
 from src.db.session import get_db
 from src.use_cases import ReturnPairsUseCase
 from pydantic import ValidationError
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
 
 # Define a blueprint
 bp = Blueprint('controllers', __name__)
@@ -18,7 +21,9 @@ def create_user_input():
 
     if not request.json:
         return jsonify({"error": "Empty payload"}), 400
-
+    
+    logging.debug("Received data: %s", request.json)
+    
     try:
         # Parse and validate JSON input with Pydantic
         input_data = UserInputEntities.RangeInput(**request.json)
@@ -40,7 +45,7 @@ def create_user_input():
         return jsonify({"error": str(e)}), 500
 
 @bp.route("/user_inputs/<int:user_input_id>", methods=["GET"])
-def read_user_input(user_input_id: int):
+def read_user_input(user_input_id: str):
     """
     Endpoint to fetch a specific user input by its ID.
     """
@@ -63,6 +68,16 @@ def read_all_user_inputs():
         limit = int(request.args.get("limit", 10))   # Default limit to 10
 
         user_inputs = crud.get_all_user_inputs(db, skip=offset, limit=limit)
-        return jsonify([UserInputEntities.UserInputResponse.model_dump(user_input) for user_input in user_inputs]), 200
+
+        # Convert ORM objects to dictionaries compatible with Pydantic
+        user_inputs_dicts = [user_input.__dict__ for user_input in user_inputs]
+
+        # Serialize using Pydantic
+        user_inputs_responses = [
+            UserInputEntities.UserInputResponse(**user_input).model_dump() for user_input in user_inputs_dicts
+        ]
+
+        return jsonify(user_inputs_responses), 200
+    
     except Exception as e:
         return jsonify({"error": str(e)}), 400
