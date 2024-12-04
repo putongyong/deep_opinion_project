@@ -28,7 +28,7 @@ def get_user_input_by_id(db: Session, user_input_id: str):
 
     Args:
         db (Session): The database session.
-        user_input_id (int): The ID of the user input entry.
+        user_input_id (str): The ID of the user input entry.
 
     Returns:
         models.UserInput: The retrieved database entry or None if not found.
