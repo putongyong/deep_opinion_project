@@ -10,7 +10,7 @@ class UserInput(Base):
     """
     __tablename__ = "user_inputs"
     id = Column(Integer, primary_key=True, index=True)  # Primary Key
-    identifier = Column(String, nullable=False)  # User identifier
+    identifier = Column(String, nullable=False, unique=True)  # User identifier
     result_list = Column(JSON, nullable=False)  # JSON field to store the generated list
 
     def __repr__(self):
