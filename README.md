@@ -1,4 +1,30 @@
 # Flask Full Stack APP
+
+## Funcationalities
+
+- Main Functionality:
+
+A simple HTML page is used to collect three inputs from the user:
+
+An identifier (string).
+Two positive integers: integer_1 and integer_2.
+The application returns a list of even integers between these two integers (inclusive).
+
+- Example: 
+
+If the user enters 1 and 8, the application returns [2, 4, 6, 8].
+
+- Data Storage:
+
+The following data should be stored in a database or a structure like a DataFrame:
+
+The identifier.
+The generated list.
+
+- User Input Validation:
+
+Inputs must be validated (e.g., ensure the integers are positive, handle cases where integer_1 > integer_2, etc.).
+
 ## How to run this repo:
 
 clone this repository:
