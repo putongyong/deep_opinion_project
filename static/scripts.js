@@ -10,14 +10,23 @@ async function submitForm(event) {
         int2: parseInt(form.elements["int2"].value.trim(), 10),
     };
 
-    console.log("Data being sent to the server:", data);
-
     if (!data.id) {
         alert("Identifier is required.");
         return;
     }
+
     if (isNaN(data.int1) || isNaN(data.int2)) {
         alert("Please enter valid numbers for First Input and Second Input.");
+        return;
+    }
+
+    if (data.int1 <= 0 || data.int2 <= 0) {
+        alert("Inputs should be postive numbers.");
+        return;
+    }
+
+    if (data.int1 >= data.int2) {
+        alert("First input should be smaller than second input.");
         return;
     }
 
